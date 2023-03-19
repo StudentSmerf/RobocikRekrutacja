@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" hidden="true">
+    <title>KN Robocik Rekrutacja</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/simplex-noise/2.4.0/simplex-noise.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+  </head>
+  <body>
+    <div id="file-protocol-contents" class="col-6 m-5 p-4 shadow-lg rounded-4 mx-auto">
+      <h4>Jak uruchomić aplikację webową</h4>
+      <p>Jeżeli widzisz ten komunikat, to znaczy, że uruchomiłeś plik <code>index.html</code>, otwierając go w przeglądarce. Do prawidłowego wyświetlania projektów WebGL osadzonych w HTML konieczne jest postawienie <strong>serwera HTTP</strong>.</p>
+      <p>Użycie opcji <strong>Build and Run</strong> automatycznie uruchamia serwer HTTP, umożliwiając szybkie testowanie.</p>
+      <p>Chcąc uniknąć ponownego eksportowania projektu, należy samodzielnie uruchomić serwer HTTP. Jednym z najprostszych do tego narzędzi jest wbudowany moduł języka <a href="https://www.python.org/">Python</a>.</p>
+      <ol>
+        <li>Zainstaluj na swoim komputerze interpreter języka <a href="https://www.python.org/">Python</a>.</li>
+        <li>Otwórz folder aplikacji, który zawiera w tej chwili otwarty plik <code>index.html</code>.</li>
+        <li>
+          Otwórz terminal w tym folderze i uruchom polecenie:
+          <div class="border rounded-3 align-middle p-3 my-2">
+            <code>python -m http.server</code>
+          </div>
+          Jeżeli system nie rozpoznaje polecenia, konieczny może być restart komputera.
+        </li>
+        <li>Otwórz adres <a href="http://localhost:8000"><code>localhost:8000</code></a> w przeglądarce.</li>
+      </ol>
+    </div>
+    <div id="contents" class="container-flex m-5 p-3 shadow-lg rounded-4 d-flex gap-3" style="display: none !important">
+      <canvas id="unity-canvas" class="rounded-3" width={{{ WIDTH }}} height={{{ HEIGHT }}} style="width: {{{ WIDTH }}}px; height: {{{ HEIGHT }}}px; background: {{{ BACKGROUND_FILENAME ? 'url(\'Build/' + BACKGROUND_FILENAME.replace(/'/g, '%27') + '\') center / cover' : BACKGROUND_COLOR }}}"></canvas>
+      <script src="Build/{{{ LOADER_FILENAME }}}"></script>
+      <div id="inputs">
+        <div class="row unity-input-group">
+          <h2>Obrót</h2>
+          <div class="col">
+            <label class="form-label hstack gap-2" for="angle-input">
+              Kąt względem północy
+              <a class="bi bi-info-square-fill" data-bs-html="true" data-bs-title="Wartości z przedziału [0, 359]&lt;br&gt;Wywołuje &lt;code class='text-light'&gt;SetAngle&lt;/code&gt;" data-bs-toggle="tooltip"></a>
+            </label>
+            <strong><p id="angle-value"></p></strong>
+            <input class="unity-input form-range" id="angle-input" data-value-element="#angle-value" data-unity-method="SetAngle" min="0" max="359" step="1" type="range">
+          </div>
+          <div class="col">
+            <label class="form-label hstack gap-2" for="angular-velocity-input">
+              Prędkość kątowa
+              <a class="bi bi-info-square-fill" data-bs-html="true" data-bs-title="Wartości z przedziału [-5, 5]&lt;br&gt;Wywołuje &lt;code class='text-light'&gt;SetAngularVelocity&lt;/code&gt;" data-bs-toggle="tooltip"></a>
+            </label>
+            <strong><p id="angular-velocity-value"></p></strong>
+            <input class="unity-input form-range" id="angular-velocity-input" data-value-element="#angular-velocity-value" data-unity-method="SetAngularVelocity" min="-5" max="5" step="0.1" type="range">
+          </div>
+        </div>
+        <hr>
+        <div class="row unity-input-group">
+          <h2>Prędkość</h2>
+          <div class="col">
+            <label class="form-label hstack gap-2" for="velocity-x-value">
+              Prędkość na boki
+              <a class="bi bi-info-square-fill" data-bs-html="true" data-bs-title="Wartości z przedziału [-5, 5]&lt;br&gt;Wywołuje &lt;code class='text-light'&gt;SetVelocityX&lt;/code&gt;" data-bs-toggle="tooltip"></a>
+            </label>
+            <strong><p id="velocity-x-value"></p></strong>
+            <input class="unity-input form-range" id="velocity-x-input" data-value-element="#velocity-x-value" data-unity-method="SetVelocityX" min="-5" max="5" step="0.1" type="range">
+          </div>
+          <div class="col">
+            <label class="form-label hstack gap-2" for="velocity-y-value">
+              Prędkość w pionie
+              <a class="bi bi-info-square-fill" data-bs-html="true" data-bs-title="Wartości z przedziału [-5, 5]&lt;br&gt;Wywołuje &lt;code class='text-light'&gt;SetVelocityY&lt;/code&gt;" data-bs-toggle="tooltip"></a>
+            </label>
+            <strong><p id="velocity-y-value"></p></strong>
+            <input class="unity-input form-range" id="velocity-y-input" data-value-element="#velocity-y-value" data-unity-method="SetVelocityY" min="-5" max="5" step="0.1" type="range">
+          </div>
+          <div class="col">
+            <label class="form-label hstack gap-2" for="velocity-z-value">
+              Prędkość na wprost
+              <a class="bi bi-info-square-fill" data-bs-html="true" data-bs-title="Wartości z przedziału [-5, 5]&lt;br&gt;Wywołuje &lt;code class='text-light'&gt;SetVelocityZ&lt;/code&gt;" data-bs-toggle="tooltip"></a>
+            </label>
+            <strong><p id="velocity-z-value"></p></strong>
+            <input class="unity-input form-range" id="velocity-z-input" data-value-element="#velocity-z-value" data-unity-method="SetVelocityZ" min="-5" max="5" step="0.1" type="range">
+          </div>
+        </div>
+        <hr>
+        <div class="row unity-input-group">
+          <h2>Przyspieszenie</h2>
+          <div class="col">
+            <label class="form-label hstack gap-2" for="acceleration-x-value">
+              Przyspieszenie na boki
+              <a class="bi bi-info-square-fill" data-bs-html="true" data-bs-title="Wartości z przedziału [-5, 5]&lt;br&gt;Wywołuje &lt;code class='text-light'&gt;SetAccelerationX&lt;/code&gt;" data-bs-toggle="tooltip"></a>
+            </label>
+            <strong><p id="acceleration-x-value"></p></strong>
+            <input class="unity-input form-range" id="acceleration-x-input" data-value-element="#acceleration-x-value" data-unity-method="SetAccelerationX" min="-5" max="5" step="0.1" type="range">
+          </div>
+          <div class="col">
+            <label class="form-label hstack gap-2" for="acceleration-y-value">
+              Przyspieszenie w pionie
+              <a class="bi bi-info-square-fill" data-bs-html="true" data-bs-title="Wartości z przedziału [-5, 5]&lt;br&gt;Wywołuje &lt;code class='text-light'&gt;SetAccelerationY&lt;/code&gt;" data-bs-toggle="tooltip"></a>
+            </label>
+            <strong><p id="acceleration-y-value"></p></strong>
+            <input class="unity-input form-range" id="acceleration-y-input" data-value-element="#acceleration-y-value" data-unity-method="SetAccelerationY" min="-5" max="5" step="0.1" type="range">
+          </div>
+          <div class="col">
+            <label class="form-label hstack gap-2" for="acceleration-z-value">
+              Przyspieszenie na wprost
+              <a class="bi bi-info-square-fill" data-bs-html="true" data-bs-title="Wartości z przedziału [-5, 5]&lt;br&gt;Wywołuje &lt;code class='text-light'&gt;SetAccelerationZ&lt;/code&gt;" data-bs-toggle="tooltip"></a>
+            </label>
+            <strong><p id="acceleration-z-value"></p></strong>
+            <input class="unity-input form-range" id="acceleration-z-input" data-value-element="#acceleration-z-value" data-unity-method="SetAccelerationZ" min="-5" max="5" step="0.1" type="range">
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col d-grid">
+            <button class="btn btn-primary btn-lg" id="noise-button">Włącz symulację</button>
+          </div>
+          <div class="col">
+            <label for="noise-speed" class="form-label">Tempo symulacji</label>
+            <input id="noise-speed" class="form-range" min="1" max="3" step="0.1" value="1.5" type="range">
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      // Display the contents only if the page is not opened from the file system
+      if (document.location.protocol != "file:") {
+        document.querySelector("#file-protocol-contents").style.display = "none";
+        document.querySelector("#contents").style.display = "";
+      }
+
+      // Initialize tooltips
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+
+      var unityInstance;
+      createUnityInstance(document.querySelector("#unity-canvas"), {
+        dataUrl: "Build/{{{ DATA_FILENAME }}}",
+        frameworkUrl: "Build/{{{ FRAMEWORK_FILENAME }}}",
+#if USE_WASM
+        codeUrl: "Build/{{{ CODE_FILENAME }}}",
+#endif
+#if MEMORY_FILENAME
+        memoryUrl: "Build/{{{ MEMORY_FILENAME }}}",
+#endif
+#if SYMBOLS_FILENAME
+        symbolsUrl: "Build/{{{ SYMBOLS_FILENAME }}}",
+#endif
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: {{{ JSON.stringify(COMPANY_NAME) }}},
+        productName: {{{ JSON.stringify(PRODUCT_NAME) }}},
+        productVersion: {{{ JSON.stringify(PRODUCT_VERSION) }}},
+        // matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
+        // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
+      }).then(u => unityInstance = u);
+
+      document.querySelectorAll(".unity-input").forEach(element => {
+        document.querySelector(element.dataset.valueElement).innerHTML = element.value;
+
+        element.addEventListener("input", event => {
+          document.querySelector(element.dataset.valueElement).innerHTML = element.value;
+
+          const gameObject = "JSInputProxy";
+          console.log(`Invoking ${element.dataset.unityMethod}(${element.value}) on gameObject ${gameObject}`);
+          unityInstance.SendMessage(gameObject, element.dataset.unityMethod, parseFloat(element.value));
+        });
+      });
+
+      document.querySelectorAll(".unity-input-group").forEach(element => {
+        element.noise = new SimplexNoise();
+      })
+
+      let noiseX = 0;
+      document.querySelector("#noise-button").addEventListener("click", event => {
+        if (event.target.classList.contains("active")) {
+          event.target.classList.remove("active");
+          event.target.classList.remove("btn-danger");
+          event.target.classList.add("btn-primary");
+          event.target.innerHTML = "Włącz symulację";
+          
+          if (event.target.interval) {
+            clearInterval(event.target.interval);
+          }
+        }
+        else {
+          event.target.classList.add("active");
+          event.target.classList.add("btn-danger");
+          event.target.classList.remove("btn-primary");
+          event.target.innerHTML = "Wyłącz symulację";
+          
+          event.target.interval = setInterval(() => {
+            noiseX += 10 ** (+document.querySelector("#noise-speed").value - 1) / 1000;
+            document.querySelectorAll(".unity-input-group").forEach(element => {
+              element.querySelectorAll(".unity-input").forEach((input, index) => {
+                var sample;
+                switch (index) {
+                  case 0:
+                    sample = element.noise.noise2D(noiseX, 0);
+                    break;
+                  case 1:
+                    sample = element.noise.noise2D(0, noiseX);
+                    break;
+                  case 2:
+                    sample = element.noise.noise2D(noiseX, noiseX);
+                    break;
+                }
+                input.value = +(parseFloat(input.min) + (parseFloat(input.max) - parseFloat(input.min)) * (sample + 1) / 2).toFixed(1);
+                input.dispatchEvent(new Event("input", { bubbles: true }));
+              })
+            });
+          }, 10);
+        }
+      });
+    </script>
+  </body>
+</html>
